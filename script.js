@@ -199,12 +199,16 @@ function loadProjects() {
                     ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                 </div>
                 <div class="project-links">
-                    ${project.github ? `<a href="${project.github}" class="project-link" target="_blank">
+                    ${project.github ? `
+                    <a href="${project.github}" class="project-link" target="_blank">
                         <i class="fab fa-github"></i> Code
-                    </a>` : ''}
-                    ${project.demo ? `<a href="${project.demo}" class="project-link" target="_blank">
+                    </a>
+                    ` : ''}
+                    ${project.demo ? `
+                    <a href="${project.demo}" class="project-link" target="_blank">
                         <i class="fas fa-external-link-alt"></i> Demo
-                    </a>` : ''}
+                    </a>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -314,11 +318,12 @@ function scrollToSection(sectionId) {
 }
 
 function downloadCV() {
-    // For now, show a message that CV will be available soon
-    // You can replace this with actual CV file path when available
-    alert('CV download will be available soon. Please contact me directly for my resume.');
-    
     // Uncomment and update the path below when you have the CV file ready:
+    // Place your CV file (e.g., 'Yonatan_Assefa_Gudeta_CV.pdf') in the same directory as this script.
+    // const link = document.createElement('a');
+    // link.href = './Yonatan_Assefa_Gudeta_CV.pdf'; // CV file in the same directory
+    // link.download = 'Yonatan_Assefa_Gudeta_CV.pdf';
+    // link.click();
     // const link = document.createElement('a');
     // link.href = 'path/to/your/cv.pdf'; // Update with actual CV file path
     // link.download = 'Yonatan_Assefa_Gudeta_CV.pdf';
@@ -366,14 +371,24 @@ function revealOnScroll() {
 
 window.addEventListener('scroll', revealOnScroll);
 
-// Parallax effect for hero section
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
+// Parallax effect for hero section with requestAnimationFrame throttling
+let lastScrollY = 0;
+let ticking = false;
+
+function handleParallax() {
     const heroSection = document.querySelector('.hero-section');
-    
     if (heroSection) {
-        const rate = scrolled * -0.5;
+        const rate = lastScrollY * -0.5;
         heroSection.style.transform = `translateY(${rate}px)`;
+    }
+    ticking = false;
+}
+
+window.addEventListener('scroll', function() {
+    lastScrollY = window.pageYOffset;
+    if (!ticking) {
+        window.requestAnimationFrame(handleParallax);
+        ticking = true;
     }
 });
 
